@@ -1,4 +1,4 @@
-# Modern JavaScript Cheatsheet 繁體中文版
+# Modern JavaScript Cheatsheet
 ## 介紹
 ### 動機
 
