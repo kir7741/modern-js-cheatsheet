@@ -392,26 +392,26 @@ console.log(myFunc(null)) // null -- 參數為 (null)，請往下看詳細解說
 - 沒有傳入參數給函式
 - 傳入的參數為 *undefined* 
 
-換句話說，f you pass in *null* the default parameter **won't be applied**.
+換句話說，如果你將 *null* 設為預設值 **會無法被應用**.
 
-> **Note:** Default value assignment can be used with destructured parameters as well (see next notion to see an example)
+> **注意:** 預設值可以與解構的參數一起被使用 (看看下一段例子)
 
-#### External resource
+#### 外部資源
 
 - [Default parameter value - ES6 Features](http://es6-features.org/#DefaultParameterValues)
 - [Default parameters - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters)
 
-### Destructuring objects and arrays
+### 解構 objects and arrays
 
-*Destructuring* is a convenient way of creating new variables by extracting some values from data stored in objects or arrays.
+*解構賦值* 是一個方便的方法，藉由創造新的變數來提取 objects 或 arrays 裡面的值。
 
-To name a few use cases, *destructuring* can be used to destructure function parameters or *this.props* in React projects for instance.
+舉例而言， *解構賦值* 可以被用來解構函式的參數或是React專案中 *this.props* 的用法。
 
-#### Explanation with sample code
+#### 程式碼範例
 
 - Object
 
-Let's consider the following object for all the samples:
+來思考一下以下這個 object：
 
 ```js
 const person = {
@@ -422,7 +422,7 @@ const person = {
 }
 ```
 
-Without destructuring
+沒有解構的情況：
 
 ```js
 const first = person.firstName;
@@ -430,18 +430,18 @@ const age = person.age;
 const city = person.city || "Paris";
 ```
 
-With destructuring, all in one line:
+在解構的情況下可以寫成一行：
 
 ```js
 const { firstName: first, age, city = "Paris" } = person; // That's it !
 
-console.log(age) // 35 -- A new variable age is created and is equal to person.age
-console.log(first) // "Nick" -- A new variable first is created and is equal to person.firstName
-console.log(firstName) // Undefined -- person.firstName exists BUT the new variable created is named first
-console.log(city) // "Paris" -- A new variable city is created and since person.city is undefined, city is equal to the default value provided "Paris".
+console.log(age) // 35 -- 創造出 age 這個新變數且等同於 person.age
+console.log(first) // "Nick" -- 創造出 first 這個新變數且等同於 person.firstName
+console.log(firstName) // Undefined -- person.firstName 是存在的，但是等於新創造的變數 first
+console.log(city) // "Paris" -- 造出 city 這個新變數，但是因為  person.city 沒有被定義，city 等同於預設值"Paris"。
 ```
 
-**Note :** In ```const { age } = person;```, the brackets after *const* keyword are not used to declare an object nor a block but is the *destructuring* syntax.
+**注意 :** 在 ```const { age } = person;```的情況下，*const* 後面的大括號並不是用來宣告物件或是區塊，這僅是 *解構賦值* 的語法。
 
 - Function parameters
 
@@ -507,7 +507,344 @@ console.log(y) // "b"
 - [Destructuring Objects - WesBos](http://wesbos.com/destructuring-objects/)
 - [ExploringJS - Destructuring](http://exploringjs.com/es6/ch_destructuring.html)
 
+### Array methods - map / filter / reduce
 
+*Map*, *filter* and *reduce* are array methods that are coming from a programming paradigm named [*functional programming*](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-functional-programming-7f218c68b3a0).
+
+To sum it up:
+
+- **Array.prototype.map()** takes an array, does something on its elements and returns an array with the transformed elements.
+- **Array.prototype.filter()** takes an array, decides element by element if it should keep it or not and returns an array with the kept elements only
+- **Array.prototype.reduce()** takes an array and aggregates the elements into a single value (which is returned)
+
+I recommend to use them as much as possible in following the principles of functional programming because they are composable, concise and elegant.
+
+With those three methods, you can avoid the use of *for* and *forEach* loops in most situations. When you are tempted to do a *for* loop, try to do it with *map*, *filter* and *reduce* composed. You might struggle to do it at first because it requires you to learn a new way of thinking, but once you've got it things gets easier.
+
+#### Sample code
+
+```js
+const numbers = [0, 1, 2, 3, 4, 5, 6];
+const doubledNumbers = numbers.map(n => n * 2); // [0, 2, 4, 6, 8, 10, 12]
+const evenNumbers = numbers.filter(n => n % 2 === 0); // [0, 2, 4, 6]
+const sum = numbers.reduce((prev, next) => prev + next, 0); // 21
+```
+
+Compute total grade sum for students above 10 by composing map, filter and reduce:
+
+```js
+const students = [
+  { name: "Nick", grade: 10 },
+  { name: "John", grade: 15 },
+  { name: "Julia", grade: 19 },
+  { name: "Nathalie", grade: 9 },
+];
+
+const aboveTenSum = students
+  .map(student => student.grade) // we map the students array to an array of their grades
+  .filter(grade => grade >= 10) // we filter the grades array to keep those above 10
+  .reduce((prev, next) => prev + next, 0); // we sum all the grades above 10 one by one
+
+console.log(aboveTenSum) // 44 -- 10 (Nick) + 15 (John) + 19 (Julia), Nathalie below 10 is ignored
+```
+
+#### Explanation
+
+Let's consider the following array of numbers for our examples:
+
+```js
+const numbers = [0, 1, 2, 3, 4, 5, 6];
+```
+
+##### Array.prototype.map()
+
+```js
+const doubledNumbers = numbers.map(function(n) {
+  return n * 2;
+});
+console.log(doubledNumbers); // [0, 2, 4, 6, 8, 10, 12]
+```
+
+What's happening here? We are using .map on the *numbers* array, the map is iterating on each element of the array and passes it to our function. The goal of the function is to produce and return a new value from the one passed so that map can replace it.
+
+Lets extract this function to make it more clear, just for this once:
+
+```js
+const doubleN = function(n) { return n * 2; };
+const doubledNumbers = numbers.map(doubleN);
+console.log(doubledNumbers); // [0, 2, 4, 6, 8, 10, 12]
+```
+
+```numbers.map(doubleN)``` produces ```[doubleN(0), doubleN(1), doubleN(2), doubleN(3), doubleN(4), doubleN(5), doubleN(6)]``` which is equal to ```[0, 2, 4, 6, 8, 10, 12]```.
+
+> **Note:** If you do not need to return a new array and just want to do a loop that has side effects, you might just want to use a for / forEach loop instead of a map.
+
+##### Array.prototype.filter()
+
+```js
+const evenNumbers = numbers.filter(function(n) {
+  return n % 2 === 0; // true if "n" is par, false if "n" isn't
+});
+console.log(evenNumbers); // [0, 2, 4, 6]
+```
+
+We are using .filter on the *numbers* array, filter is iterating on each element of the array and passes it to our function. The goal of the function is to return a boolean that will determine whether the current value will be kept or not. Filter then returns the array with only the kept values.
+
+##### Array.prototype.reduce()
+
+The reduce method goal is to *reduce* all elements of the array it iterates on into a single value. How it aggregates those elements is up to you.
+
+```js
+const sum = numbers.reduce(
+  function(acc, n) {
+    return acc + n;
+  },
+  0 // accumulator variable value at first iteration step
+);
+
+console.log(sum) //21
+```
+
+Just like for .map and .filter methods, .reduce is applied on an array and takes a function as the first parameter.
+
+This time though, there are changes:
+
+- .reduce takes two parameters
+
+The first parameter is a function that will be called at each iteration step.
+
+The second parameter is the value of the accumulator variable (*acc* here) at the first iteration step (read next point to understand).
+
+- Function parameters
+
+The function you pass as the first parameter of .reduce takes two parameters. The first one (*acc* here) is the accumulator variable, whereas the second parameter (*n*) is the current element.
+
+The accumulator variable is equal to the return value of your function at the **previous** iteration step. At the first step of the iteration, *acc* is equal to the value you passed as .reduce second parameter.
+
+###### At first iteration step
+
+```acc = 0``` because we passed in 0 as the second parameter for reduce
+
+```n = 0``` first element of the *number* array
+
+Function returns *acc* + *n* --> 0 + 0 --> 0
+
+###### At second iteration step
+
+```acc = 0``` because its the value the function returned at the previous iteration step
+
+```n = 1``` second element of the *number* array
+
+Function returns *acc* + *n* --> 0 + 1 --> 1
+
+###### At third iteration step
+
+```acc = 1``` because its the value the function returned at the previous iteration step
+
+```n = 2``` third element of the *number* array
+
+Function returns *acc* + *n* --> 1 + 2 --> 3
+
+###### At fourth iteration step
+
+```acc = 3``` because it's the value the function returned at the previous iteration step
+
+```n = 3``` fourth element of the *number* array
+
+Function returns *acc* + *n* --> 3 + 3 --> 6
+
+###### [...] At last iteration step
+
+```acc = 15``` because it's the value the function returned at the previous iteration step
+
+```n = 6``` last element of the *number* array
+
+Function returns *acc* + *n* --> 15 + 6 --> 21
+
+As it is the last iteration step, **.reduce** returns 21.
+
+#### External Resource
+
+- [Understanding map / filter / reduce in JS](https://hackernoon.com/understanding-map-filter-and-reduce-in-javascript-5df1c7eee464)
+
+### Spread operator "..."
+
+The spread operator ```...``` has been introduced with ES2015 and is used to expand elements of an iterable (like an array) into places where multiple elements can fit.
+
+#### Sample code
+
+```js
+const arr1 = ["a", "b", "c"];
+const arr2 = [...arr1, "d", "e", "f"]; // ["a", "b", "c", "d", "e", "f"]
+```
+
+```js
+function myFunc(x, y, ...params) {
+  console.log(x);
+  console.log(y);
+  console.log(params)
+}
+
+myFunc("a", "b", "c", "d", "e", "f")
+// "a"
+// "b"
+// ["c", "d", "e", "f"]
+```
+
+```js
+const { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
+console.log(x); // 1
+console.log(y); // 2
+console.log(z); // { a: 3, b: 4 }
+
+const n = { x, y, ...z };
+console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
+```
+
+#### Explanation
+
+##### In iterables (like arrays)
+
+If we have the two following arrays:
+
+```js
+const arr1 = ["a", "b", "c"];
+const arr2 = [arr1, "d", "e", "f"]; // [["a", "b", "c"], "d", "e", "f"]
+```
+
+*arr2* the first element is an array because *arr1* is injected as is into *arr2*. But what we want is *arr2* to be an array of letters. To do so, we can *spread* the elements of *arr1* into *arr2*.
+
+With spread operator
+
+```js
+const arr1 = ["a", "b", "c"];
+const arr2 = [...arr1, "d", "e", "f"]; // ["a", "b", "c", "d", "e", "f"]
+```
+
+##### Function rest parameter
+
+In function parameters, we can use the rest operator to inject parameters into an array we can loop in. There is already an **argument** object bound to every function that is equal to an array of all the parameters passed into the function.
+
+```js
+function myFunc() {
+  for (var i = 0; i < arguments.length; i++) {
+    console.log(arguments[i]);
+  }
+}
+
+myFunc("Nick", "Anderson", 10, 12, 6);
+// "Nick"
+// "Anderson"
+// 10
+// 12
+// 6
+```
+
+But let's say that we want this function to create a new student with its grades and with its average grade. Wouldn't it be more convenient to extract the first two parameters into two separate variables, and then have all the grades in an array we can iterate over?
+
+That's exactly what the rest operator allows us to do!
+
+```js
+function createStudent(firstName, lastName, ...grades) {
+  // firstName = "Nick"
+  // lastName = "Anderson"
+  // [10, 12, 6] -- "..." takes all other parameters passed and creates a "grades" array variable that contains them
+
+  const avgGrade = grades.reduce((acc, curr) => acc + curr, 0) / grades.length; // computes average grade from grades
+
+  return {
+    firstName: firstName,
+    lastName: lastName,
+    grades: grades,
+    avgGrade: avgGrade
+  }
+}
+
+const student = createStudent("Nick", "Anderson", 10, 12, 6);
+console.log(student);
+// {
+//   firstName: "Nick",
+//   lastName: "Anderson",
+//   grades: [10, 12, 6],
+//   avgGrade: 9,33
+// }
+```
+
+> **Note:** createStudent function is bad because we don't check if grades.length exists or is different from 0. But it's easier to read this way, so I didn't handle this case.
+
+##### Object properties spreading
+
+For this one, I recommend you read previous explanations about the rest operator on iterables and function parameters.
+
+```js
+const myObj = { x: 1, y: 2, a: 3, b: 4 };
+const { x, y, ...z } = myObj; // object destructuring here
+console.log(x); // 1
+console.log(y); // 2
+console.log(z); // { a: 3, b: 4 }
+
+// z is the rest of the object destructured: myObj object minus x and y properties destructured
+
+const n = { x, y, ...z };
+console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
+
+// Here z object properties are spread into n
+```
+
+#### External resources
+
+- [TC39 - Object rest/spread](https://github.com/tc39/proposal-object-rest-spread)
+- [Spread operator introduction - WesBos](https://github.com/wesbos/es6-articles/blob/master/28%20-%20Spread%20Operator%20Introduction.md)
+- [JavaScript & the spread operator](https://codeburst.io/javascript-the-spread-operator-a867a71668ca)
+- [6 Great uses of the spread operator](https://davidwalsh.name/spread-operator)
+
+### Object property shorthand
+
+When assigning a variable to an object property, if the variable name is equal to the property name, you can do the following:
+
+```js
+const x = 10;
+const myObj = { x };
+console.log(myObj.x) // 10
+```
+
+#### Explanation
+
+Usually (pre-ES2015) when you declare a new *object literal* and want to use variables as object properties values, you would write this kind of code:
+
+```js
+const x = 10;
+const y = 20;
+
+const myObj = {
+  x: x, // assigning x variable value to myObj.x
+  y: y // assigning y variable value to myObj.y
+};
+
+console.log(myObj.x) // 10
+console.log(myObj.y) // 20
+```
+
+As you can see, this is quite repetitive because the properties name of myObj are the same as the variable names you want to assign to those properties.
+
+With ES2015, when the variable name is the same as the property name, you can do this shorthand:
+
+```js
+const x = 10;
+const y = 20;
+
+const myObj = {
+  x,
+  y
+};
+
+console.log(myObj.x) // 10
+console.log(myObj.y) // 20
+```
+
+#### External resources
+
+- [Property shorthand - ES6 Features](http://es6-features.org/#PropertyShorthand)
 
 
 
