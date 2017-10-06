@@ -36,20 +36,21 @@
    <th><a href="#tdz_sample">暫時死區</a></th>
   </tr>
   <tr>
+  <tr>
     <th>const</th>
-    <td>區塊{}內</td>
-    <td>否</td>
+    <td>區塊{}內</td>
+    <td>否</td>
     <td><a href="#const_mutable_sample">是</a></td>
     <td>是</td>
   </tr>
   <tr>
     <th>let</th>
-    <td>區塊{}內</td>
+    <td>區塊{}內</td>
     <td>是</td>
     <td>是</td>
     <td>是</td>
   </tr>
-   <tr>
+  <tr>
     <th>var</th>
     <td>函式內</td>
     <td>是</td>
@@ -324,40 +325,40 @@ console.log(getPerson()) // { name: "Nick", age: 24 } -- object 被箭頭函式�
   }
 ```
 
-##### *this* 參考
+##### *this* 參考資料
 
-To understand this subtlety introduced with arrow functions, you must know how [this](#this_def) behaves in JavaScript.
+想要更細微的瞭解箭頭函式, 你必須了解 [this](#this_def) 在 JavaScript 是如何運作的。
 
-In an arrow function, *this* is equal to the *this* value of the enclosing execution context. What it means is that an arrow function doesn't create a new *this*, it grabs it from its surrounding instead.
+在箭頭函式中, *this* 等同於封閉的執行環境的 *this*。意思是說，箭頭函式並沒有創造一個新的 *this*，而是從外圍環境去抓 *this*。
 
-Without arrow function, if you wanted to access a variable from *this* in a function inside a function, you had to use the *that = this* or *self = this* trick.
+在不使用箭頭函式的情況下，如果你想在函式中的函式來取得外部函式的 *this* 值，你需要使用 *that = this* 或是 *self = this* 這樣的小技巧。
 
-For instance, using setTimeout function inside myFunc:
+舉例來說，以 myFunc 函式中的 setTimeout 函式來說明：
 
 ```js
 function myFunc() {
   this.myVar = 0;
-  var that = this; // that = this trick
-  setTimeout(
-    function() { // A new *this* is created in this function scope
+  var that = this; //that = this 小技巧
+  setTimeout(
+    function() { //在這個函式的作用域中會產生出新的 *this* 
       that.myVar++;
       console.log(that.myVar) // 1
 
-      console.log(this.myVar) // undefined -- see function declaration above
-    },
+      console.log(this.myVar) // undefined -- 詳見上述的函式宣告(這個函式沒有賦予值給myVar這個變數)
+    },
     0
   );
 }
 ```
 
-But with arrow function, *this* is taken from its surrounding:
+但在箭頭函是中, *this* 會從外部環境來取得
 
 ```js
 function myFunc() {
   this.myVar = 0;
   setTimeout(
-    () => { // this taken from surrounding, meaning myFunc here
-      this.myVar++;
+    () => { // this 從外部環境被取得, 此處代表 myFunc 這個函式
+      this.myVar++;
       console.log(this.myVar) // 1
     },
     0
@@ -365,33 +366,33 @@ function myFunc() {
 }
 ```
 
-#### Useful resources
+#### 有用的資源
 
 - [Arrow functions introduction - WesBos](http://wesbos.com/arrow-functions/)
 - [JavaScript arrow function - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
 - [Arrow function and lexical *this*](https://hackernoon.com/javascript-es6-arrow-functions-and-lexical-this-f2a3e2a5e8c4)
 
-### Function default parameter value
+### 函式的預設值
 
-Starting from ES2015 JavaScript update, you can set default value to your function parameters using the following syntax:
+從 ES2015 JavaScript 的更新開始，你可以依照下面的語法來替你的參數加上預設值： 
 
 ```js
 function myFunc(x = 10) {
   return x;
 }
-console.log(myFunc()) // 10 -- no value is provided so x default value 10 is assigned to x in myFunc
-console.log(myFunc(5)) // 5 -- a value is provided so x is equal to 5 in myFunc
+console.log(myFunc()) // 10 -- 沒有指定參數，所以函式會使用 x 的預設值10
+console.log(myFunc(5)) // 5 -- 有指定參數，所以使用帶入的參數
 
-console.log(myFunc(undefined)) // 10 -- undefined value is provided so default value is assigned to x
-console.log(myFunc(null)) // null -- a value (null) is provided, see below for more details
+console.log(myFunc(undefined)) // 10 -- 參數為 undefined value ，一樣使用 x 的預設值10
+console.log(myFunc(null)) // null -- 參數為 (null)，請往下看詳細解說
 ```
 
-The default parameter is applied in two and only two situations:
+參數預設值只能被應用在以下兩種情況：
 
-- No parameter provided
-- *undefined* parameter provided
+- 沒有傳入參數給函式
+- 傳入的參數為 *undefined* 
 
-In other words, if you pass in *null* the default parameter **won't be applied**.
+換句話說，f you pass in *null* the default parameter **won't be applied**.
 
 > **Note:** Default value assignment can be used with destructured parameters as well (see next notion to see an example)
 
