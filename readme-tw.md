@@ -701,7 +701,7 @@ const n = { x, y, ...z };
 console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
 ```
 
-#### Explanation
+#### 詳細說明
 
 ##### In iterables (like arrays)
 
@@ -808,26 +808,26 @@ const myObj = { x };
 console.log(myObj.x) // 10
 ```
 
-#### Explanation
+#### 詳細解釋
 
-Usually (pre-ES2015) when you declare a new *object literal* and want to use variables as object properties values, you would write this kind of code:
+通常 (pre-ES2015) 當你先告一個新 *object literal* ，並且使用變數來做為物件屬性的值，你可能會寫出下面這種程式碼：
 
 ```js
 const x = 10;
 const y = 20;
 
 const myObj = {
-  x: x, // assigning x variable value to myObj.x
-  y: y // assigning y variable value to myObj.y
-};
+  x: x, // 指派變數 x 給 myObj.x
+  y: y //  指派變數 y 給 myObj.y
+ };
 
 console.log(myObj.x) // 10
 console.log(myObj.y) // 20
 ```
 
-As you can see, this is quite repetitive because the properties name of myObj are the same as the variable names you want to assign to those properties.
+就如同你所看到的，這樣相當的繁瑣，因為 myObj 屬性的名稱和欲指派給屬性的變數名稱都是一樣的。
 
-With ES2015, when the variable name is the same as the property name, you can do this shorthand:
+使用 ES2015 寫法，當變數的名稱和屬性的名稱相同，你可以這樣縮寫：
 
 ```js
 const x = 10;
@@ -842,9 +842,526 @@ console.log(myObj.x) // 10
 console.log(myObj.y) // 20
 ```
 
-#### External resources
+#### 外部資源
 
 - [Property shorthand - ES6 Features](http://es6-features.org/#PropertyShorthand)
 
+### Promises
 
+Promise 是一個物件，可以從非同步函式回傳同步。([ref](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-promise-27fc71e77261#3cd0)).
 
+Promises 可以用來避免 [迴圈地獄](http://callbackhell.com/), and they are more and more frequently encountered in modern JavaScript projects.
+
+#### 範例程式碼
+
+```js
+const fetchingPosts = new Promise((res, rej) => {
+  $.get("/posts")
+    .done(posts => res(posts))
+    .fail(err => rej(err));
+});
+
+fetchingPosts
+  .then(posts => console.log(posts))
+  .catch(err => console.log(err));
+```
+
+#### 詳細說明
+
+當你執行 *Ajax repquest* 時，回傳的過程不是同步的，因為你想要的資源會花一些時間來取得。你請求的資源甚至會因為某些原因(404) 而無法取得。
+
+為了處理這樣的情況， ES2015 提供了*promises* 這個語法。 Promises 有以下三種狀態：
+
+- 進行中(pending)
+- 完成(Fulfilled)
+- 拒絕(Rejected)
+
+假設我們想要利用 promises 來處理 Ajax request 來獲得 X 這個資源。
+
+##### 創造 promise
+
+首先，我們要來創造一個 promise。 我們會使用 JQuery 的get 方法來執行 Ajax request 以獲得 X。
+
+```js
+const xFetcherPromise = new Promise( // 使用 "new" 這個關鍵字來創造一個 promise 並且將它儲存在變數裡
+  function(resolve, reject) { // Promise 的建構式接受一個函式為參數，而這個函式裡面又有兩個參數，分別代表成功和失敗
+    $.get("X") // 啟動 Ajax request
+      .done(function(X) { // 一旦請求完成...
+        resolve(X); // ... resolve 代表執行成功的程序，並把 X 做為參數
+      })
+      .fail(function(error) { // 如果請求失敗...
+        reject(error); // ... reject 代表請求失敗的程序，並把錯誤的訊息做為參數
+      });
+  }
+)
+```
+
+就如同上述看到的例子，Promise 這個物件帶有一個擁有兩個參數 **resolve** 和 **reject** 的 *執行* 函式。這兩個參數是函式，並且會把 promise 的 *pending* 狀態分別移至 *完成(fulfilled)* 和 *失敗(rejected)* 的狀態。
+
+當實例創造時，Promise 是處於進行中 (pending) 的狀態，而且Promise的 *執行* 函式會立刻被執行。一旦執行函式 *成功(resolve)* 或 *失敗(reject)* ， Promise 會呼叫處理器來處理接下來的事情。
+
+##### Promise 的處理器方法
+
+為了得到 Promise 的結果(或失敗訊息)，我們必須接著使用一些處理方式：
+
+```js
+xFetcherPromise
+  .then(function(X) {
+    console.log(X);
+  })
+  .catch(function(err) {
+    console.log(err)
+  })
+```
+
+如果 Promise 成功了, *resolve* 這個函式會被執行，並且 ```then``` 的函式參數也會被執行。
+
+如果 Promise 失敗了, *reject* 這個函式會被執行，並且 ```catch``` 的函式參數也會被執行。
+
+> **注意 :** 當Promise 已經呈現 fulfilled 狀態或是 rejected 狀態，且對應的方法也附加上去了，這個方法才會被呼叫，所以非同步操作和處理器的執行程序是沒有競賽條件的(兩者的執行過程不會互相影響)。 [(Ref: MDN)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#Description)
+
+#### 外部資源
+
+- [JavaScript Promises for dummies - Jecelyn Yeen](https://scotch.io/tutorials/javascript-promises-for-dummies)
+- [JavaScript Promise API - David Walsh](https://davidwalsh.name/promises)
+- [Using promises - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
+- [What is a promise - Eric Elliott](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-promise-27fc71e77261)
+- [JavaScript Promises: an Introduction - Jake Archibald](https://developers.google.com/web/fundamentals/getting-started/primers/promises)
+- [Promise documentation - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+
+### 模版字串(Template literals)
+
+模版字符串(Template literals)是一種針對單一字串或多行字串的 [*expression interpolation*](https://en.wikipedia.org/wiki/String_interpolation)。
+換句話說，這是一個新的字串語法，讓你可以在 JavaScript 的表達中更方便的使用 (例如變數)。
+
+#### 程式碼範例
+
+```js
+const name = "Nick";
+`Hello ${name}, the following expression is equal to four : ${2+2}`;
+
+// Hello Nick, the following expression is equal to four: 4
+```
+
+#### 外部資源
+
+- [String interpolation - ES6 Features](http://es6-features.org/#StringInterpolation)
+- [ES6 Template Strings - Addy Osmani](https://developers.google.com/web/updates/2015/01/ES6-Template-Strings)
+
+### 標籤模版(Tagged template literals)
+
+模板標籤是放在 *[模版字串(template literal)](#template-literals)* 前的函式。當函式依照這個方式被呼叫，則第一個參數就會是由 *strings* 組成的陣列，that appear between the template's interpolated variables, and the subsequent paremeters are the interpolated values. Use a spread operator `...` to capture all of them. [(Ref: MDN)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_template_literals).
+
+> **Note :** A famous library named [styled-components](https://www.styled-components.com/) heavily relies on this feature.
+
+Below is a toy example on they work.
+```js
+function highlight(strings, ...values) {
+  const interpolation = strings.reduce((prev, next) => {
+    return prev + next + (values.shift() || "");
+  }, "");
+
+  return `<mark>${interpolation}</mark>`;
+}
+
+const condiment = "jam";
+const meal = "toast";
+
+highlight`I like ${condiment} on ${meal}.`;
+// "<mark>I like jam on toast.</mark>"
+```
+
+A more interesting example: 
+```js
+function comma(strings, ...values) {
+  return strings.reduce((prev, next) => {
+    let value = values.shift() || [];
+    value = value.join(", ");
+    return prev + next + value;
+  }, "");
+}
+
+const snacks = ['apples', 'bananas', 'cherries'];
+comma`I like ${snacks} to snack on.`;
+// "I like apples, bananas, cherries to snack on."
+```
+
+#### External resources
+- [Wes Bos on Tagged Template Literals](http://wesbos.com/tagged-template-literals/)
+- [Library of common template tags](https://github.com/declandewet/common-tags)
+
+### Imports / Exports
+
+ES6 modules are used to access variables or functions in a module explicitly exported by the modules it imports.
+
+I highly recommend to take a look at MDN resources on import/export (see external resources below), it is both straightforward and complete.
+
+#### Explanation with sample code
+
+##### Named exports
+
+Named exports are used to export several values from a module.
+
+> **Note :** You can only name-export [first-class citizens](https://en.wikipedia.org/wiki/First-class_citizen) that have a name.
+
+```js
+// mathConstants.js
+export const pi = 3.14;
+export const exp = 2.7;
+export const alpha = 0.35;
+
+// -------------
+
+// myFile.js
+import { pi, exp } from './mathConstants.js'; // Named import -- destructuring-like syntax
+console.log(pi) // 3.14
+console.log(exp) // 2.7
+
+// -------------
+
+// mySecondFile.js
+import * as constants from './mathConstants.js'; // Inject all exported values into constants variable
+console.log(constants.pi) // 3.14
+console.log(constants.exp) // 2.7
+```
+
+While named imports looks like *destructuring*, they have a different syntax and are not the same. They don't support default values nor *deep* destructuring.
+
+Besides, you can do aliases but the syntax is different from the one used in destructuring:
+
+```js
+import { foo as bar } from 'myFile.js'; // foo is imported and injected into a new bar variable
+```
+
+##### Default import / export
+
+Concerning the default export, there is only a single default export per module. A default export can be a function, a class, an object or anything else. This value is considered the "main" exported value since it will be the simplest to import. [Ref: MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export#Description)
+
+```js
+// coolNumber.js
+const ultimateNumber = 42;
+export default ultimateNumber;
+
+// ------------
+
+// myFile.js
+import number from './coolNumber.js';
+// Default export, independently from its name, is automatically injected into number variable;
+console.log(number) // 42
+```
+
+Function exporting:
+
+```js
+// sum.js
+export default function sum(x, y) {
+  return x + y;
+}
+// -------------
+
+// myFile.js
+import sum from './sum.js';
+const result = sum(1, 2);
+console.log(result) // 3
+```
+
+#### External resources
+
+- [ES6 Modules in bulletpoints](https://ponyfoo.com/articles/es6#modules)
+- [Export - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+- [Import - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
+- [Understanding ES6 Modules](https://www.sitepoint.com/understanding-es6-modules/)
+- [Destructuring special case - import statements](https://ponyfoo.com/articles/es6-destructuring-in-depth#special-case-import-statements)
+- [Misunderstanding ES6 Modules - Kent C. Dodds](https://medium.com/@kentcdodds/misunderstanding-es6-modules-upgrading-babel-tears-and-a-solution-ad2d5ab93ce0)
+- [Modules in JavaScript](http://exploringjs.com/es6/ch_modules.html#sec_modules-in-javascript)
+
+### <a name="this_def"></a> JavaScript *this*
+
+*this* operator behaves differently than in other languages and is in most cases determined by how a function is called. ([Ref: MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)).
+
+This notion is having many subtleties and being quite hard, I highly suggest you to deep dive in the external resources below. Thus, I will provide what I personally have in mind to determine what *this* is equal to. I have learned this tip from [this article written by Yehuda Katz](http://yehudakatz.com/2011/08/11/understanding-javascript-function-invocation-and-this/).
+
+```js
+function myFunc() {
+  ...
+}
+
+// After each statement, you find the value of *this* in myFunc
+
+myFunc.call("myString", "hello") // "myString" -- first .call parameter value is injected into *this*
+
+// In non-strict-mode
+myFunc("hello") // window -- myFunc() is syntax sugar for myFunc.call(window, "hello")
+
+// In strict-mode
+myFunc("hello") // undefined -- myFunc() is syntax sugar for myFunc.call(undefined, "hello")
+```
+
+```js
+var person = {
+  myFunc: function() { ... }
+}
+
+person.myFunc.call(person, "test") // person Object -- first call parameter is injected into *this*
+person.myFunc("test") // person Object -- person.myFunc() is syntax sugar for person.myFunc.call(person, "test")
+
+var myBoundFunc = person.myFunc.bind("hello") // Creates a new function in which we inject "hello" in *this* value
+person.myFunc("test") // person Object -- The bind method has no effect on the original method
+myBoundFunc("test") // "hello" -- myBoundFunc is person.myFunc with "hello" bound to *this*
+```
+
+#### External resources
+
+- [Understanding JavaScript Function Invocation and "this" - Yehuda Katz](http://yehudakatz.com/2011/08/11/understanding-javascript-function-invocation-and-this/)
+- [JavaScript this - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)
+
+### Class
+
+JavaScript is a [prototype-based](https://en.wikipedia.org/wiki/Prototype-based_programming) language (whereas Java is [class-based](https://en.wikipedia.org/wiki/Class-based_programming) language, for instance). ES6 has introduced JavaScript classes which are meant to be a syntactic sugar for prototype-based inheritance and **not** a new class-based inheritance model ([ref](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)).
+
+The word *class* is indeed error prone if you are familiar with classes in other languages. If you do, avoid assuming how JavaScript classes work on this basis and consider it an entirely different notion.
+
+Since this document is not an attempt to teach you the language from the ground up, I will believe you know what prototypes are and how they behave. But here are some links I found great to understand this notion:
+
+- [Understanding Prototypes in JS - Yehuda Katz](http://yehudakatz.com/2011/08/12/understanding-prototypes-in-javascript/)
+- [A plain English guide to JS prototypes - Sebastian Porto](http://sporto.github.io/blog/2013/02/22/a-plain-english-guide-to-javascript-prototypes/)
+- [Inheritance and the prototype chain - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
+
+#### Samples
+
+Before ES6, prototype syntax:
+
+```js
+var Person = function(name, age) {
+  this.name = name;
+  this.age = age;
+}
+Person.prototype.stringSentence = function() {
+  return "Hello, my name is " + this.name + " and I'm " + this.age;
+}
+```
+
+With ES6 class syntax:
+
+```js
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  stringSentence() {
+    return "Hello, my name is " + this.name + " and I'm " + this.age;
+  }
+}
+
+const myPerson = new Person("Manu", 23);
+console.log(myPerson.age) // 23
+console.log(myPerson.stringSentence()) // "Hello, my name is Manu and I'm 23
+```
+
+#### External resources
+
+For prototype understanding:
+
+- [Understanding Prototypes in JS - Yehuda Katz](http://yehudakatz.com/2011/08/12/understanding-prototypes-in-javascript/)
+- [A plain English guide to JS prototypes - Sebastian Porto](http://sporto.github.io/blog/2013/02/22/a-plain-english-guide-to-javascript-prototypes/)
+- [Inheritance and the prototype chain - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
+
+For classes understanding:
+
+- [ES6 Classes in Depth - Nicolas Bevacqua](https://ponyfoo.com/articles/es6-classes-in-depth)
+- [ES6 Features - Classes](http://es6-features.org/#ClassDefinition)
+- [JavaScript Classes - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
+
+### Async Await
+
+In addition to [Promises](#promises), there is a new syntax you might encounter to handle asynchronous code named *async / await*.
+
+The purpose of async/await functions is to simplify the behavior of using promises synchronously and to perform some behavior on a group of Promises. Just as Promises are similar to structured callbacks, async/await is similar to combining generators and promises. ([Ref: MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function))
+
+> **Note :** You must understand what are promises and how they work before trying to understand async / await since they rely on it.
+
+> **Note 2:** [*await* must be used in an *async* function](https://hackernoon.com/6-reasons-why-javascripts-async-await-blows-promises-away-tutorial-c7ec10518dd9#f3f0), which means that you can't use await in the top level of our code since that is not inside an async function.
+
+#### Sample code
+
+```js
+async function getGithubUser(username) { // async keyword allows usage of await in the function and means function returns a promise
+  try { // this is how errors are handled with async / await
+    const response = await fetch(`https://api.github.com/users/${username}`); // "synchronously" waiting fetch promise to resolve before going to next line
+    return response.json();
+  } catch (err) {
+    alert(err);
+  }
+}
+
+getGithubUser('mbeaudru').then(user => console.log(user)); // logging user response - cannot use await syntax since this code isn't in async function
+```
+
+#### Explanation with sample code
+
+*Async / Await* is built on promises but they allow a more imperative style of code.
+
+*async* operator turns a function into a *promise* in which you can use the *await* operator.
+
+```js
+async function myFunc() {
+  // we can use await operator because this function is async
+  try {
+    return "hello world";
+  } catch(e) {
+    throw new Error();
+  }
+}
+
+myFunc().then(msg => console.log(msg)) // "hello world" -- myFunc is turned into a promise because of async operator
+```
+
+When the *return* statement of an async function is reached, the promise is fulfilled with the value returned. If an error is thrown inside an async function, the promise state will turn to *rejected*.
+
+*await* operator is used to wait for a *Promise* to be fulfilled and only can be used inside an *async* function body. When encountered, the code execution is paused until the promise is fulfilled.
+
+> **Note :** *fetch* is a Promise that allows to do an AJAX request
+
+Let's see how we could fetch a github user with promises first:
+
+```js
+function getGithubUser(username) {
+  return new Promise((resolve, reject) => {
+    fetch(`https://api.github.com/users/${username}`)
+      .then(response => {
+        const user = response.json();
+        resolve(user);
+      })
+      .catch(err => reject(err));
+  })
+}
+
+getGithubUser('mbeaudru')
+  .then(user => console.log(user))
+  .catch(err => console.log(err));
+```
+
+Here's the *async / await* equivalent:
+
+```js
+async function getGithubUser(username) { // promise + await keyword usage allowed
+  try { // We handle async function errors with try / catch
+    const response = await fetch(`https://api.github.com/users/${username}`); // Execution stops here until fetch promise is fulfilled.
+    const user = response.json();
+    return user; // equivalent of resolving the getGithubUser promise with user value.
+  } catch (err) {
+    throw new Error(err); // equivalent of rejecting getGithubUser promise with err value.
+  }
+}
+
+getGithubUser('mbeaudru')
+  .then(user => console.log(user))
+  .catch(err => console.log(err));
+```
+
+*async / await* syntax is particularly convenient when you need to chain promises that are interdependent.
+
+For instance, if you need to get a token in order to be able to fetch a blog post on a database and then the author informations:
+
+```js
+async function fetchPostById(postId) {
+  try {
+    const token = await fetch('token_url');
+    const post = await fetch(`/posts/${postId}?token=${token}`);
+    const author = await fetch(`/users/${post.authorId}`);
+
+    post.author = author;
+    return post;
+  } catch(e) {
+    throw new Error(e);
+  }
+}
+
+fetchPostById('gzIrzeo64')
+  .then(post => console.log(post))
+  .catch(err => console.log(err));
+```
+
+> **Note :** As you can see, *try / catch* are necessary to handle errors. But if you are making *express routes*, you can use a middleware to avoid error handling and have a very pleasant code to read. See [this article from Alex Bazhenov](https://medium.com/@Abazhenov/using-async-await-in-express-with-node-8-b8af872c0016) to learn more.
+
+#### External resources
+
+- [Async/Await - JavaScript.Info](https://javascript.info/async-await)
+- [ES7 Async/Await](http://rossboucher.com/await/#/)
+- [6 Reasons Why JavaScript’s Async/Await Blows Promises Away](https://hackernoon.com/6-reasons-why-javascripts-async-await-blows-promises-away-tutorial-c7ec10518dd9)
+- [JavaScript awaits](https://dev.to/kayis/javascript-awaits)
+- [Using Async Await in Express with Node 8](https://medium.com/@Abazhenov/using-async-await-in-express-with-node-8-b8af872c0016)
+- [Async Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
+- [Await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await)
+- [Using async / await in express with node 8](https://medium.com/@Abazhenov/using-async-await-in-express-with-node-8-b8af872c0016)
+
+### Truthy / Falsy
+
+In JavaScript, a truthy or falsy value is a value that is being casted into a boolean when evaluated in a boolean context. An example of boolean context would be the evaluation of an ```if``` condition:
+
+Every value will be casted to ```true``` unless they are equal to:
+
+- false
+- 0
+- "" (empty string)
+- null
+- undefined
+- NaN
+
+Here are examples of *boolean context*:
+
+- ```if``` condition evaluation
+
+```js
+if (myVar) {}
+```
+
+```myVar``` can be any [first-class citizen](https://en.wikipedia.org/wiki/First-class_citizen) (variable, function, boolean) but it will be casted into a boolean because it's evaluated in a boolean context.
+
+- After logical **NOT** ```!``` operator
+
+This operator returns false if its single operand can be converted to true; otherwise, returns true.
+
+```js
+!0 // true -- 0 is falsy so it returns true
+!!0 // false -- 0 is falsy so !0 returns true so !(!0) returns false
+!!"" // false -- empty string is falsy so NOT (NOT false) equals false
+```
+
+- With the *Boolean* object constructor
+
+```js
+new Boolean(0) // false
+new Boolean(1) // true
+```
+
+- In a ternary evaluation
+
+```js
+myVar ? "truthy" : "falsy"
+```
+
+myVar is evaluated in a boolean context.
+
+## Glossary
+
+### <a name="scope_def"></a> Scope
+
+The context in which values and expressions are "visible," or can be referenced. If a variable or other expression is not "in the current scope," then it is unavailable for use.
+
+Source: [MDN](https://developer.mozilla.org/en-US/docs/Glossary/Scope)
+
+### <a name="mutation_def"></a> Variable mutation
+
+A variable is said to have been mutated when its initial value has changed afterward.
+
+```js
+var myArray = [];
+myArray.push("firstEl") // myArray is being mutated
+```
+
+A variable is said to be *immutable* if it can't be mutated.
+
+[Check MDN Mutable article](https://developer.mozilla.org/en-US/docs/Glossary/Mutable) for more details.
