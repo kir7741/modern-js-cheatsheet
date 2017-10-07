@@ -970,7 +970,7 @@ highlight`I like ${condiment} on ${meal}.`;
 // "<mark>I like jam on toast.</mark>"
 ```
 
-A more interesting example: 
+在一個有趣的例子: 
 ```js
 function comma(strings, ...values) {
   return strings.reduce((prev, next) => {
@@ -999,9 +999,9 @@ ES6 模組被用來獲得從別的模組明確輸出(exports)的變數或是函�
 
 ##### Named exports()
 
-Named exports are used to export several values from a module.
+Named exports 被用來從模組中輸出多個變數。
 
-> **Note :** You can only name-export [first-class citizens](https://en.wikipedia.org/wiki/First-class_citizen) that have a name.
+> **注意 :** 你只能使用 name-export 來輸出命名過的第一類物件[first-class citizens](https://en.wikipedia.org/wiki/First-class_citizen) 。
 
 ```js
 // mathConstants.js
@@ -1012,29 +1012,29 @@ export const alpha = 0.35;
 // -------------
 
 // myFile.js
-import { pi, exp } from './mathConstants.js'; // Named import -- destructuring-like syntax
+import { pi, exp } from './mathConstants.js'; // Named import --  類似解構的語法
 console.log(pi) // 3.14
 console.log(exp) // 2.7
 
 // -------------
 
 // mySecondFile.js
-import * as constants from './mathConstants.js'; // Inject all exported values into constants variable
+import * as constants from './mathConstants.js'; // 講所有輸出的值都存進 constants 這個變數
 console.log(constants.pi) // 3.14
 console.log(constants.exp) // 2.7
 ```
 
-While named imports looks like *destructuring*, they have a different syntax and are not the same. They don't support default values nor *deep* destructuring.
+雖然 named imports 看似跟 *解構賦值* 一樣，但他們完全不同也有著不一樣的語法。They don't support default values nor *deep* destructuring.
 
 Besides, you can do aliases but the syntax is different from the one used in destructuring:
 
 ```js
-import { foo as bar } from 'myFile.js'; // foo is imported and injected into a new bar variable
+import { foo as bar } from 'myFile.js'; // foo 被引入後，存進 bar 這個變數裡
 ```
 
-##### Default import / export
+##### 預設 import / export
 
-Concerning the default export, there is only a single default export per module. A default export can be a function, a class, an object or anything else. This value is considered the "main" exported value since it will be the simplest to import. [Ref: MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export#Description)
+提到 default export，每個模組只有一個default export。Default export 可以是函式，類別，物件，或其他東西。這個值被視為 "主要" 的輸出值，因為它會是最容易被引入的。 [Ref: MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export#Description)
 
 ```js
 // coolNumber.js
@@ -1045,11 +1045,11 @@ export default ultimateNumber;
 
 // myFile.js
 import number from './coolNumber.js';
-// Default export, independently from its name, is automatically injected into number variable;
+// Default export，跟它的名子無關，會自動傳入 number 這個變數
 console.log(number) // 42
 ```
 
-Function exporting:
+函式輸出：
 
 ```js
 // sum.js
@@ -1064,7 +1064,7 @@ const result = sum(1, 2);
 console.log(result) // 3
 ```
 
-#### External resources
+#### 外部資源
 
 - [ES6 Modules in bulletpoints](https://ponyfoo.com/articles/es6#modules)
 - [Export - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
@@ -1076,24 +1076,24 @@ console.log(result) // 3
 
 ### <a name="this_def"></a> JavaScript *this*
 
-*this* operator behaves differently than in other languages and is in most cases determined by how a function is called. ([Ref: MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)).
+*this* 運算子的行為和其他語言的行為是不一樣的，且在大多數的情況下 this 是由函式的呼叫方式而決定。([Ref: MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)).
 
-This notion is having many subtleties and being quite hard, I highly suggest you to deep dive in the external resources below. Thus, I will provide what I personally have in mind to determine what *this* is equal to. I have learned this tip from [this article written by Yehuda Katz](http://yehudakatz.com/2011/08/11/understanding-javascript-function-invocation-and-this/).
+這個部分有許多細節與相對困難之處，我強烈建議你去深入研究下方的外部資源。因此，我會提供一些我個人的想法來幫助你了解 *this* 是如何被決定的。我從 [this article written by Yehuda Katz](http://yehudakatz.com/2011/08/11/understanding-javascript-function-invocation-and-this/)學習到了這個小技巧。
 
 ```js
 function myFunc() {
   ...
 }
 
-// After each statement, you find the value of *this* in myFunc
+// 在每個論述後面，你都可以在 myFunc 找到 *this* 
 
-myFunc.call("myString", "hello") // "myString" -- first .call parameter value is injected into *this*
+myFunc.call("myString", "hello") // "myString" --  call 的第一個參數被傳進 *this* 裡面
 
-// In non-strict-mode
-myFunc("hello") // window -- myFunc() is syntax sugar for myFunc.call(window, "hello")
+// 在非嚴格模式之下
+myFunc("hello") // window -- myFunc() 是 myFunc.call(window, "hello") 的語法糖
 
-// In strict-mode
-myFunc("hello") // undefined -- myFunc() is syntax sugar for myFunc.call(undefined, "hello")
+// 在嚴格模式之下
+myFunc("hello") // undefined -- myFunc() 是 myFunc.call(undefined, "hello") 的語法糖
 ```
 
 ```js
@@ -1101,11 +1101,11 @@ var person = {
   myFunc: function() { ... }
 }
 
-person.myFunc.call(person, "test") // person Object -- first call parameter is injected into *this*
-person.myFunc("test") // person Object -- person.myFunc() is syntax sugar for person.myFunc.call(person, "test")
+person.myFunc.call(person, "test") // person Object -- call 的第一個參數被傳進 *this* 裡面
+person.myFunc("test") // person Object -- person.myFunc() 是 person.myFunc.call(person, "test") 的語法糖
 
-var myBoundFunc = person.myFunc.bind("hello") // Creates a new function in which we inject "hello" in *this* value
-person.myFunc("test") // person Object -- The bind method has no effect on the original method
+var myBoundFunc = person.myFunc.bind("hello") // 創造一個函式並且將 "hello" 傳入 *this* value
+person.myFunc("test") // person Object -- 綁定方法對原本的方法沒有影響
 myBoundFunc("test") // "hello" -- myBoundFunc is person.myFunc with "hello" bound to *this*
 ```
 
@@ -1115,20 +1115,20 @@ myBoundFunc("test") // "hello" -- myBoundFunc is person.myFunc with "hello" boun
 - [JavaScript this - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this)
 
 ### Class
+ES6 引入了 JavaScript 類別，它們是基於原型繼承的語法糖，而 不是 真正意義上基於類別的繼承模型。
+Javascript是一個 [prototype-based](https://en.wikipedia.org/wiki/Prototype-based_programming) 的語言 (而 Java is [class-based](https://en.wikipedia.org/wiki/Class-based_programming) 的語言)。 ES6 使用了 JavaScript 的類別，這類別是基於原形繼承的語法糖， **並不是** 一個基於類別繼承的模組。([ref](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)).
 
-JavaScript is a [prototype-based](https://en.wikipedia.org/wiki/Prototype-based_programming) language (whereas Java is [class-based](https://en.wikipedia.org/wiki/Class-based_programming) language, for instance). ES6 has introduced JavaScript classes which are meant to be a syntactic sugar for prototype-based inheritance and **not** a new class-based inheritance model ([ref](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)).
+如果你對其他語言的 classes 相當熟悉的話 ，你的確會傾向於誤解 Javascript 的 *class* 。請不要在這樣的基礎下去妄自猜想 JavaScript classes 是如何運作的，你要把他是為一種全新的概念。
 
-The word *class* is indeed error prone if you are familiar with classes in other languages. If you do, avoid assuming how JavaScript classes work on this basis and consider it an entirely different notion.
-
-Since this document is not an attempt to teach you the language from the ground up, I will believe you know what prototypes are and how they behave. But here are some links I found great to understand this notion:
+因為這份文件沒有試圖要從頭開始教你 Javascript。 我相信你已經了解何為原型及原型的行為。但這裡還是有些連結可以幫助你了解這些概念：
 
 - [Understanding Prototypes in JS - Yehuda Katz](http://yehudakatz.com/2011/08/12/understanding-prototypes-in-javascript/)
 - [A plain English guide to JS prototypes - Sebastian Porto](http://sporto.github.io/blog/2013/02/22/a-plain-english-guide-to-javascript-prototypes/)
 - [Inheritance and the prototype chain - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
 
-#### Samples
+#### 範例
 
-Before ES6, prototype syntax:
+ES6 之前的原型語法：
 
 ```js
 var Person = function(name, age) {
@@ -1140,7 +1140,7 @@ Person.prototype.stringSentence = function() {
 }
 ```
 
-With ES6 class syntax:
+使用ES6的新類型語法：
 
 ```js
 class Person {
@@ -1159,15 +1159,14 @@ console.log(myPerson.age) // 23
 console.log(myPerson.stringSentence()) // "Hello, my name is Manu and I'm 23
 ```
 
-#### External resources
-
-For prototype understanding:
+#### 外部資源
+了解原型:
 
 - [Understanding Prototypes in JS - Yehuda Katz](http://yehudakatz.com/2011/08/12/understanding-prototypes-in-javascript/)
 - [A plain English guide to JS prototypes - Sebastian Porto](http://sporto.github.io/blog/2013/02/22/a-plain-english-guide-to-javascript-prototypes/)
 - [Inheritance and the prototype chain - MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
 
-For classes understanding:
+了解類別:
 
 - [ES6 Classes in Depth - Nicolas Bevacqua](https://ponyfoo.com/articles/es6-classes-in-depth)
 - [ES6 Features - Classes](http://es6-features.org/#ClassDefinition)
@@ -1175,7 +1174,7 @@ For classes understanding:
 
 ### Async Await
 
-In addition to [Promises](#promises), there is a new syntax you might encounter to handle asynchronous code named *async / await*.
+除了 [Promises](#promises)以外，這裡你可能會遇到處理非同步的新語法，稱為 *async / await*。
 
 The purpose of async/await functions is to simplify the behavior of using promises synchronously and to perform some behavior on a group of Promises. Just as Promises are similar to structured callbacks, async/await is similar to combining generators and promises. ([Ref: MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function))
 
