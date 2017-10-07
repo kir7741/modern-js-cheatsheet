@@ -1186,43 +1186,43 @@ async/await functions 的目的是要簡化同步使用 promises 的行為，並
 
 ```js
 async function getGithubUser(username) { // 關鍵字 async 允許我們在函式內使用 await，並且函式會回傳 promise
-  try { // this is how errors are handled with async / await
-    const response = await fetch(`https://api.github.com/users/${username}`); // "synchronously" waiting fetch promise to resolve before going to next line
-    return response.json();
+  try { //async / await 會使用 try/catch 來處理錯誤
+    const response = await fetch(`https://api.github.com/users/${username}`); // 同步地等待 fetch promise 完成，才會進行下一步
+    return response.json();
   } catch (err) {
     alert(err);
   }
 }
 
-getGithubUser('mbeaudru').then(user => console.log(user)); // logging user response - cannot use await syntax since this code isn't in async function
+getGithubUser('mbeaudru').then(user => console.log(user)); // 記錄 user 的回傳 - 這裡不可使用 await 語法，因為不在 async function 裡面
 ```
 
-#### Explanation with sample code
+#### 程式碼解說
 
-*Async / Await* is built on promises but they allow a more imperative style of code.
+*Async / Await* 的語法建立在 promises 之上，但是前者允許使用命令式風格來撰寫程式碼。
 
-*async* operator turns a function into a *promise* in which you can use the *await* operator.
+*async* 運算子將函式轉換成 *promise* ，在這個函式裡面你可以使用 *await* 。
 
 ```js
 async function myFunc() {
-  // we can use await operator because this function is async
-  try {
+  //因為是 async 函式，所以可以使用 await
+  try {
     return "hello world";
   } catch(e) {
     throw new Error();
   }
 }
 
-myFunc().then(msg => console.log(msg)) // "hello world" -- myFunc is turned into a promise because of async operator
+myFunc().then(msg => console.log(msg)) // "hello world" -- myFunc 因為 async 運算子而轉換成promise
 ```
 
-When the *return* statement of an async function is reached, the promise is fulfilled with the value returned. If an error is thrown inside an async function, the promise state will turn to *rejected*.
+當 async function 裡 *return* 完成了， Promise 就滿足條件，並且回傳值。如果 async function 出現 error，Promise 的狀態會變成 *rejected*。
 
-*await* operator is used to wait for a *Promise* to be fulfilled and only can be used inside an *async* function body. When encountered, the code execution is paused until the promise is fulfilled.
+*await* 運算子，會等待 *Promise* 滿足條件，且只能用在 *async* function 的區塊。使用時，執行環境會暫停，等到 await 的動作完成後且 Promise 完成或發生錯誤，才會進行下一步。
 
-> **Note :** *fetch* is a Promise that allows to do an AJAX request
+> **注意:** *fetch* 是 Promise 用來執行 AJAX request 的方法。
 
-Let's see how we could fetch a github user with promises first:
+讓我們來看看使用Promise的fetch來取得 github 的資料：
 
 ```js
 function getGithubUser(username) {
@@ -1241,16 +1241,16 @@ getGithubUser('mbeaudru')
   .catch(err => console.log(err));
 ```
 
-Here's the *async / await* equivalent:
+*async / await* 的撰寫方法如下：
 
 ```js
 async function getGithubUser(username) { // promise + await keyword usage allowed
-  try { // We handle async function errors with try / catch
-    const response = await fetch(`https://api.github.com/users/${username}`); // Execution stops here until fetch promise is fulfilled.
-    const user = response.json();
-    return user; // equivalent of resolving the getGithubUser promise with user value.
-  } catch (err) {
-    throw new Error(err); // equivalent of rejecting getGithubUser promise with err value.
+  try { // 我們使用 try / catch 來處理 async function errors
+    const response = await fetch(`https://api.github.com/users/${username}`); // 執行暫停直到 fetch promise 完成
+    const user = response.json();
+    return user; // 等於 Promise 完成後的resolve參數(resolve(user))
+  } catch (err) {
+    throw new Error(err); //  等於 Promise 失敗後的 rejecte 參數(reject(err))
   }
 }
 
@@ -1259,9 +1259,8 @@ getGithubUser('mbeaudru')
   .catch(err => console.log(err));
 ```
 
-*async / await* syntax is particularly convenient when you need to chain promises that are interdependent.
-
-For instance, if you need to get a token in order to be able to fetch a blog post on a database and then the author informations:
+*async / await* 的語法特別適合用在一連串相互依賴的 Promises。
+舉例而言，如果你需要從資料庫依序 fetch 部落格文章和作者資料：
 
 ```js
 async function fetchPostById(postId) {
@@ -1282,9 +1281,9 @@ fetchPostById('gzIrzeo64')
   .catch(err => console.log(err));
 ```
 
-> **Note :** As you can see, *try / catch* are necessary to handle errors. But if you are making *express routes*, you can use a middleware to avoid error handling and have a very pleasant code to read. See [this article from Alex Bazhenov](https://medium.com/@Abazhenov/using-async-await-in-express-with-node-8-b8af872c0016) to learn more.
+> **注意:** As you can see, *try / catch* are necessary to handle errors. But if you are making *express routes*, you can use a middleware to avoid error handling and have a very pleasant code to read. See [this article from Alex Bazhenov](https://medium.com/@Abazhenov/using-async-await-in-express-with-node-8-b8af872c0016) to learn more.
 
-#### External resources
+#### 外部資源
 
 - [Async/Await - JavaScript.Info](https://javascript.info/async-await)
 - [ES7 Async/Await](http://rossboucher.com/await/#/)
@@ -1298,9 +1297,9 @@ fetchPostById('gzIrzeo64')
 
 ### Truthy / Falsy
 
-In JavaScript, a truthy or falsy value is a value that is being casted into a boolean when evaluated in a boolean context. An example of boolean context would be the evaluation of an ```if``` condition:
+在 JavaScript 裡，truthy 或是 falsy value 是一種在布林值分類下，結果等同於 true 或是 false 的值。可以用  ```if``` 條件式來進行布林值判斷:
 
-Every value will be casted to ```true``` unless they are equal to:
+每一個值都會被分類為```true```，除了以下幾種：
 
 - false
 - 0
@@ -1309,19 +1308,20 @@ Every value will be casted to ```true``` unless they are equal to:
 - undefined
 - NaN
 
-Here are examples of *boolean context*:
+這裡有一些 *boolean context* 的例子：
 
-- ```if``` condition evaluation
+- ```if``` 條件式判斷：
 
 ```js
 if (myVar) {}
 ```
 
-```myVar``` can be any [first-class citizen](https://en.wikipedia.org/wiki/First-class_citizen) (variable, function, boolean) but it will be casted into a boolean because it's evaluated in a boolean context.
+```myVar``` 可以是任何的[第一類物件(first-class citizen)](https://en.wikipedia.org/wiki/First-class_citizen) (變數，函式，布林) 但是這些會
+在 boolean context 中被轉換成布林值。
 
-- After logical **NOT** ```!``` operator
+- 使用 **NOT** ```!``` 這個邏輯運算子
 
-This operator returns false if its single operand can be converted to true; otherwise, returns true.
+如果單一運算元為 true，則這個運算子會回傳 false ，反之，則回傳true。
 
 ```js
 !0 // true -- 0 is falsy so it returns true
@@ -1329,38 +1329,37 @@ This operator returns false if its single operand can be converted to true; othe
 !!"" // false -- empty string is falsy so NOT (NOT false) equals false
 ```
 
-- With the *Boolean* object constructor
+- 使用 *Boolean* 物件的建構式
 
 ```js
 new Boolean(0) // false
 new Boolean(1) // true
 ```
 
-- In a ternary evaluation
+- 使用三元判斷式：
 
 ```js
 myVar ? "truthy" : "falsy"
 ```
 
-myVar is evaluated in a boolean context.
+myVar 會在 boolean context 被評估。
 
-## Glossary
+## 總結
 
-### <a name="scope_def"></a> Scope
+### <a name="scope_def"></a> 作用域
 
-The context in which values and expressions are "visible," or can be referenced. If a variable or other expression is not "in the current scope," then it is unavailable for use.
+係指在作用域中變數和表達式都是 "可見的" 或是可以被查詢的。如果變數或其他表達式不在 "目前的作用域" 當中，則不可被使用。
 
 Source: [MDN](https://developer.mozilla.org/en-US/docs/Glossary/Scope)
 
-### <a name="mutation_def"></a> Variable mutation
+### <a name="mutation_def"></a> 變數變化
 
-A variable is said to have been mutated when its initial value has changed afterward.
-
+當一個變數的初始值被改變了，就稱為變數變化。
 ```js
 var myArray = [];
-myArray.push("firstEl") // myArray is being mutated
+myArray.push("firstEl") // myArray 被變化了
 ```
 
-A variable is said to be *immutable* if it can't be mutated.
+如果變數不能被變化，我們稱之為不可變變數 (*immutable* )。
 
 [Check MDN Mutable article](https://developer.mozilla.org/en-US/docs/Glossary/Mutable) for more details.
