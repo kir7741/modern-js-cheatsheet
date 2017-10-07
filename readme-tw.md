@@ -798,10 +798,9 @@ console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
 - [JavaScript & the spread operator](https://codeburst.io/javascript-the-spread-operator-a867a71668ca)
 - [6 Great uses of the spread operator](https://davidwalsh.name/spread-operator)
 
-### Object property shorthand
+### Object 屬性縮寫
 
-When assigning a variable to an object property, if the variable name is equal to the property name, you can do the following:
-
+當指派一個變數做為 object 的屬性時，如果變數名稱和屬性名稱相同，可以參考下列的寫法： 
 ```js
 const x = 10;
 const myObj = { x };
@@ -950,11 +949,11 @@ const name = "Nick";
 
 ### 標籤模版(Tagged template literals)
 
-模板標籤是放在 *[模版字串(template literal)](#template-literals)* 前的函式。當函式依照這個方式被呼叫，則第一個參數就會是由 *strings* 組成的陣列，that appear between the template's interpolated variables, and the subsequent paremeters are the interpolated values. Use a spread operator `...` to capture all of them. [(Ref: MDN)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_template_literals).
+模板標籤是放在 *[模版字串(template literal)](#template-literals)* 前的函式。當函式依照這個方式被呼叫，則第一個參數就會是由 *strings* 組成的陣列，它的元素會是除了${}包覆的變數以外的字串。而第二個參數就是用${}包覆的變數，可以使用延伸運算子 `...` 來獲取他們。 [(Ref: MDN)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_template_literals).
 
-> **Note :** A famous library named [styled-components](https://www.styled-components.com/) heavily relies on this feature.
+> **注意 :** 一個叫做 [styled-components](https://www.styled-components.com/) 的受歡迎library 相當依賴這種使用方式。
 
-Below is a toy example on they work.
+以下是他們的作品範例：
 ```js
 function highlight(strings, ...values) {
   const interpolation = strings.reduce((prev, next) => {
@@ -986,19 +985,19 @@ comma`I like ${snacks} to snack on.`;
 // "I like apples, bananas, cherries to snack on."
 ```
 
-#### External resources
+#### 外部資源
 - [Wes Bos on Tagged Template Literals](http://wesbos.com/tagged-template-literals/)
 - [Library of common template tags](https://github.com/declandewet/common-tags)
 
 ### Imports / Exports
 
-ES6 modules are used to access variables or functions in a module explicitly exported by the modules it imports.
+ES6 模組被用來獲得從別的模組明確輸出(exports)的變數或是函式。
 
-I highly recommend to take a look at MDN resources on import/export (see external resources below), it is both straightforward and complete.
+我極度推薦你去閱讀 MDN  關於 import/export 的文章(詳見下方外部資料)，它們寫得直接又完整。 
 
-#### Explanation with sample code
+#### 程式碼解釋
 
-##### Named exports
+##### Named exports()
 
 Named exports are used to export several values from a module.
 
