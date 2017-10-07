@@ -443,11 +443,11 @@ console.log(city) // "Paris" -- 造出 city 這個新變數，但是因為  pers
 
 **注意 :** 在 ```const { age } = person;```的情況下，*const* 後面的大括號並不是用來宣告物件或是區塊，這僅是 *解構賦值* 的語法。
 
-- Function parameters
+- 函式參數
 
-*Destructuring* is often used to destructure objects parameters in functions.
+*解構賦值* 常常被用來解構函式裡的物件參數。
 
-Without destructuring
+沒有解構的情況：
 
 ```js
 function joinFirstLastName(person) {
@@ -462,14 +462,14 @@ joinFirstLastName(person); // "Nick-Anderson"
 In destructuring the object parameter *person*, we get a more concise function:
 
 ```js
-function joinFirstLastName({ firstName, lastName }) { // we create firstName and lastName variables by destructuring person parameter
+function joinFirstLastName({ firstName, lastName }) { // 我們藉由解構 Person 這個物件來創造出兩個新變數
   return firstName + '-' + lastName;
 }
 
 joinFirstLastName(person); // "Nick-Anderson"
 ```
 
-Destructuring is even more pleasant to use with [arrow functions](#arrow_func_concept):
+解構賦值搭配 [箭頭函式](#arrow_func_concept)會有不錯的效果：
 
 ```js
 const joinFirstLastName = ({ firstName, lastName }) => firstName + '-' + lastName;
@@ -477,47 +477,47 @@ const joinFirstLastName = ({ firstName, lastName }) => firstName + '-' + lastNam
 joinFirstLastName(person); // "Nick-Anderson"
 ```
 
-- Array
+- 陣列
 
-Lets consider the following array:
+來思考一下以下的陣列：
 
 ```js
 const myArray = ["a", "b", "c"];
 ```
 
-Without destructuring
+沒有解構的情況：
 
 ```js
 const x = myArray[0];
 const y = myArray[1];
 ```
 
-With destructuring
+解構賦值的情況下：
 
 ```js
-const [x, y] = myArray; // That's it !
+const [x, y] = myArray; // 就是這樣 !
 
 console.log(x) // "a"
 console.log(y) // "b"
 ```
 
-#### Useful resources
+#### 有用的資源
 
 - [ES6 Features - Destructuring Assignment](http://es6-features.org/#ArrayMatching)
 - [Destructuring Objects - WesBos](http://wesbos.com/destructuring-objects/)
 - [ExploringJS - Destructuring](http://exploringjs.com/es6/ch_destructuring.html)
 
-### Array methods - map / filter / reduce
+### 陣列的方法- map / filter / reduce
 
-*Map*, *filter* and *reduce* are array methods that are coming from a programming paradigm named [*functional programming*](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-functional-programming-7f218c68b3a0).
+*Map*, *filter* 和 *reduce* 都是來自於 [*functional programming*](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-functional-programming-7f218c68b3a0)這份開發範例的陣列方法。
 
-To sum it up:
+總而言之：
 
-- **Array.prototype.map()** takes an array, does something on its elements and returns an array with the transformed elements.
-- **Array.prototype.filter()** takes an array, decides element by element if it should keep it or not and returns an array with the kept elements only
-- **Array.prototype.reduce()** takes an array and aggregates the elements into a single value (which is returned)
+- **Array.prototype.map()** 針對一組陣列，對陣列的元素進行操作，並回傳一組操作完成的陣列。t
+- **Array.prototype.filter()** 針對一組陣列，依據條件來決定該保留哪個元素，並且回傳一組含有被保留元素的陣列。
+- **Array.prototype.reduce()** 針對一組陣列，並且將元素總和成一個值。
 
-I recommend to use them as much as possible in following the principles of functional programming because they are composable, concise and elegant.
+我推薦盡可能地遵循函式編程的原則去使用這些方法，因為這些方法具有可組合、簡潔、優雅等的特性。
 
 With those three methods, you can avoid the use of *for* and *forEach* loops in most situations. When you are tempted to do a *for* loop, try to do it with *map*, *filter* and *reduce* composed. You might struggle to do it at first because it requires you to learn a new way of thinking, but once you've got it things gets easier.
 
