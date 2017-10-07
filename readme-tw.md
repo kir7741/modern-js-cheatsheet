@@ -849,7 +849,7 @@ console.log(myObj.y) // 20
 
 Promise 是一個物件，可以從非同步函式回傳同步。([ref](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-promise-27fc71e77261#3cd0)).
 
-Promises 可以用來避免 [迴圈地獄](http://callbackhell.com/), and they are more and more frequently encountered in modern JavaScript projects.
+Promises 可以用來避免 [迴圈地獄](http://callbackhell.com/)，並且越來越常在現代的 Javascript 專案中使用。
 
 #### 範例程式碼
 
