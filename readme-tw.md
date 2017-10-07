@@ -809,7 +809,7 @@ console.log(myObj.x) // 10
 
 #### 詳細解釋
 
-通常 (pre-ES2015) 當你先告一個新 *object literal* ，並且使用變數來做為物件屬性的值，你可能會寫出下面這種程式碼：
+通常 (pre-ES2015) 的情況下，當你宣告一個新 *object literal* ，並且使用變數來做為物件屬性的值，你可能會寫出下面這種程式碼：
 
 ```js
 const x = 10;
@@ -1176,16 +1176,16 @@ console.log(myPerson.stringSentence()) // "Hello, my name is Manu and I'm 23
 
 除了 [Promises](#promises)以外，這裡你可能會遇到處理非同步的新語法，稱為 *async / await*。
 
-The purpose of async/await functions is to simplify the behavior of using promises synchronously and to perform some behavior on a group of Promises. Just as Promises are similar to structured callbacks, async/await is similar to combining generators and promises. ([Ref: MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function))
+async/await functions 的目的是要簡化同步使用 promises 的行為，並對一組 Promises 執行一些行為。如同 Promises 類似於結構化的 callbacks，async/await 類似於 generators 和 promises 的組合。 ([Ref: MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function))
 
-> **Note :** You must understand what are promises and how they work before trying to understand async / await since they rely on it.
+> **注意:** 在研究 async / await 之前，你必須先了解什麼是 promises 以及它是如何運作的，因為 async / await 是 promise 的延伸。
 
-> **Note 2:** [*await* must be used in an *async* function](https://hackernoon.com/6-reasons-why-javascripts-async-await-blows-promises-away-tutorial-c7ec10518dd9#f3f0), which means that you can't use await in the top level of our code since that is not inside an async function.
+> **Note 2:** [*await* must be used in an *async* function](https://hackernoon.com/6-reasons-why-javascripts-async-await-blows-promises-away-tutorial-c7ec10518dd9#f3f0), 這意謂著你不能在程式碼的最外層使用 await 因為它不在 async function 的裡面
 
 #### Sample code
 
 ```js
-async function getGithubUser(username) { // async keyword allows usage of await in the function and means function returns a promise
+async function getGithubUser(username) { // 關鍵字 async 允許我們在函式內使用 await，並且函式會回傳 promise
   try { // this is how errors are handled with async / await
     const response = await fetch(`https://api.github.com/users/${username}`); // "synchronously" waiting fetch promise to resolve before going to next line
     return response.json();
@@ -1294,6 +1294,7 @@ fetchPostById('gzIrzeo64')
 - [Async Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
 - [Await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await)
 - [Using async / await in express with node 8](https://medium.com/@Abazhenov/using-async-await-in-express-with-node-8-b8af872c0016)
+- [告別Promise](https://jigsawye.com/2016/04/18/understanding-javascript-async-await/)
 
 ### Truthy / Falsy
 
