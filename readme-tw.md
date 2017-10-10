@@ -513,15 +513,15 @@ console.log(y) // "b"
 
 總而言之：
 
-- **Array.prototype.map()** 針對一組陣列，對陣列的元素進行操作，並回傳一組操作完成的陣列。t
+- **Array.prototype.map()** 針對一組陣列，對陣列的元素進行操作，並回傳一組操作完成的陣列。
 - **Array.prototype.filter()** 針對一組陣列，依據條件來決定該保留哪個元素，並且回傳一組含有被保留元素的陣列。
 - **Array.prototype.reduce()** 針對一組陣列，並且將元素總和成一個值。
 
 我推薦盡可能地遵循函式編程的原則去使用這些方法，因為這些方法具有可組合、簡潔、優雅等的特性。
 
-With those three methods, you can avoid the use of *for* and *forEach* loops in most situations. When you are tempted to do a *for* loop, try to do it with *map*, *filter* and *reduce* composed. You might struggle to do it at first because it requires you to learn a new way of thinking, but once you've got it things gets easier.
+使這些方法後，你在大多數的情況下都可以避免使用 *for* 和 *forEach* 的迴圈。 開始使用時可能需要花些力氣去了解它們，因為你必須去學習一些新的觀念，一旦你了解之後，事情就會變得簡單很多。
 
-#### Sample code
+#### 程式碼範例
 
 ```js
 const numbers = [0, 1, 2, 3, 4, 5, 6];
@@ -530,7 +530,7 @@ const evenNumbers = numbers.filter(n => n % 2 === 0); // [0, 2, 4, 6]
 const sum = numbers.reduce((prev, next) => prev + next, 0); // 21
 ```
 
-Compute total grade sum for students above 10 by composing map, filter and reduce:
+利用 map, filter 和 reduce 的組合算出成績大於等於10分的總合
 
 ```js
 const students = [
@@ -541,16 +541,16 @@ const students = [
 ];
 
 const aboveTenSum = students
-  .map(student => student.grade) // we map the students array to an array of their grades
-  .filter(grade => grade >= 10) // we filter the grades array to keep those above 10
-  .reduce((prev, next) => prev + next, 0); // we sum all the grades above 10 one by one
+  .map(student => student.grade) // map 後得到 [10,15,19,9]
+  .filter(grade => grade >= 10) // filter 後得到 [10,15,19]
+  .reduce((prev, next) => prev + next, 0); // 依序總和
 
 console.log(aboveTenSum) // 44 -- 10 (Nick) + 15 (John) + 19 (Julia), Nathalie below 10 is ignored
 ```
 
-#### Explanation
+#### 詳細解說
 
-Let's consider the following array of numbers for our examples:
+讓我們以下列這組陣列為例子：
 
 ```js
 const numbers = [0, 1, 2, 3, 4, 5, 6];
